@@ -55,7 +55,7 @@ model RuProduct {
 }
 
 model EuProduct {
-  euProductId     Int      @default(autoincrement()) @id @map("euProduct_id")
+  euProductId     Int      @id @default(autoincrement()) @map("euProduct_id")
   linkToSource    String   @db.VarChar(255)
   name            String   @db.VarChar(255)
   productType     String   @db.VarChar(255)

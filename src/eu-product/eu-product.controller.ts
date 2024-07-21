@@ -32,4 +32,19 @@ export class EuProductController {
     return this.euProductService.findById(+id);
   }
 
+  @Post('create')
+  create(@Body() createEuProductDto: CreateEuProductDto) {
+    return this.euProductService.create(createEuProductDto);
+  }
+
+  @Patch('/edit/:id')
+  update(@Param('id') id: string, @Body() updateEuProductDto: UpdateEuProductDto) {
+    return this.euProductService.update(+id, updateEuProductDto);
+  }
+
+  @Delete('/delete/:id')
+  remove(@Param('id') id: string) {
+    return this.euProductService.remove(+id);
+  }
+
 }
