@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Client {
+  clientId     Int      @id @map("client_id")
+  username     String   @db.VarChar(255)
+  password     String   @db.VarChar(8000)
+  role         String   @db.VarChar(255)
+  number       String   @db.VarChar(255)
+  address      String   @db.VarChar(255)
+  location     String   @db.VarChar(255)
+  email        String   @db.VarChar(255)
+  contactInfo  String   @db.VarChar(255) @map("contact_information")
+  orders       Order[]
+  userBasket   UserBasket[]
+}
+
+model RuProduct {
+  ruProductId   Int      @id @map("ruProduct_id")
+  linkToSource  String   @db.VarChar(255)
+  name          String   @db.VarChar(255)
+  productType   String   @db.VarChar(255)
+  size          String   @db.VarChar(255)
+  color         String   @db.VarChar(255)
+  description   String   @db.VarChar(255)
+  weight        Float
+  buyingPrice   Float
+  postToNl      Float
+  postToRb      Float
+  postToBuyer   Float
+  wrapping      Float
+  extraFirst    Float   @map("extra_first")
+  wrappingSecond Float   @map("wrapping_second")
+  selfprice     Float
+  selfpriceInRubles Float   @map("selfpriceInRubles")
+  sellingPriceInRubles Float   @map("sellingPriceInRubles")
+  profit        Float
+  orderedProducts OrderedProduct[]
+  userBasket       UserBasket[]
+  photoProds      PhotoProd[]
+}
+
+model EuProduct {
+  euProductId     Int      @default(autoincrement()) @id @map("euProduct_id")
+  linkToSource    String   @db.VarChar(255)
+  name            String   @db.VarChar(255)
+  productType     String   @db.VarChar(255)
+  size            String   @db.VarChar(255)
+  color           String   @db.VarChar(255)
+  description     String   @db.VarChar(255)
+  slug            String   @db.VarChar(255)
+  weight          Float
+  buyingPrice     Float
+  postToNl        Float
+  postToBuyer     Float
+  wrapping        Float
+  extraFirst      Float   @map("extra_first")
+  selfprice       Float
+  sellingPrice    Float
+  profit          Float
+  orderedProducts OrderedProduct[]
+  userBasket       UserBasket[]
+  photoProds      PhotoProd[]
+}
+
+model Order {
+  orderId      Int      @id @map("order_id")
+  nameOfOrder   String   @db.VarChar(255)
+  client       Client   @relation(fields: [clientId], references: [clientId])
+  clientId     Int
+  status       String   @db.VarChar(255)
+  dateOfBuy     DateTime @db.Date @map("dateOfBuy")
+  dateOfPreorder DateTime @db.Date @map("dateOfPreorder")
+  dateOfFullPay  DateTime @db.Date @map("dateOfFullPay")
+  orderedProducts OrderedProduct[]
+}
+
+model OrderedProduct {
+  orderedProductId Int      @id @map("orderedProducts_id")
+  order           Order   @relation(fields: [orderId], references: [orderId])
+  orderId         Int
+  status          Int
+  ruProduct       RuProduct? @relation(fields: [ruProductId], references: [ruProductId])
+  ruProductId     Int?
+  euProduct       EuProduct? @relation(fields: [euProductId], references: [euProductId])
+  euProductId     Int?
+  trackNumber     Int
+}
+
+model UserBasket {
+  userBasketId Int      @id @map("userBasket_id")
+  client       Client   @relation(fields: [clientId], references: [clientId])
+  clientId     Int
+  ruProduct     RuProduct? @relation(fields: [ruProductId], references: [ruProductId])
+  ruProductId   Int?
+  euProduct     EuProduct? @relation(fields: [euProductId], references: [euProductId])
+  euProductId   Int?
+}
+
+model PhotoProd {
+  photoId     Int      @id @map("photo_id")
+  ruProduct   RuProduct? @relation(fields: [ruProductId], references: [ruProductId])
+  ruProductId Int?
+  euProduct   EuProduct? @relation(fields: [euProductId], references: [euProductId])
+  euProductId Int?
+  linkToPhoto String   @db.VarChar(255)
+}
