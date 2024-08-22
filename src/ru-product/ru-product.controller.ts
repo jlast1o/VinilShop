@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { RuProductService } from './ru-product.service';
 import { CreateRuProductDto } from './dto/create-ru-product.dto';
 import { UpdateRuProductDto } from './dto/update-ru-product.dto';
@@ -7,27 +7,37 @@ import { UpdateRuProductDto } from './dto/update-ru-product.dto';
 export class RuProductController {
   constructor(private readonly ruProductService: RuProductService) {}
 
-  @Post()
-  create(@Body() createRuProductDto: CreateRuProductDto) {
-    return this.ruProductService.create(createRuProductDto);
+  @Get()
+  findAll(@Query('searchTerm') searchTerm?: string) {
+    return this.ruProductService.findAll(searchTerm);
   }
 
-  @Get()
-  findAll() {
-    return this.ruProductService.findAll();
+  @Get('/slug/:id')
+  findBySlug(@Param('slug') slug: string) {
+    return this.ruProductService.findBySlug(slug);
+  }
+
+  @Get('/relatives/:id')
+  findRelatives(@Param('id') id: string) {
+    return this.ruProductService.findRelatives(+id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ruProductService.findOne(+id);
+  findById(@Param('id') id: string) {
+    return this.ruProductService.findById(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRuProductDto: UpdateRuProductDto) {
-    return this.ruProductService.update(+id, updateRuProductDto);
+  @Post('create')
+  create(@Body() createEuProductDto: CreateRuProductDto) {
+    return this.ruProductService.create(createEuProductDto);
   }
 
-  @Delete(':id')
+  @Patch('/edit/:id')
+  update(@Param('id') id: string, @Body() updateEuProductDto: UpdateRuProductDto) {
+    return this.ruProductService.update(+id, updateEuProductDto);
+  }
+
+  @Delete('/delete/:id')
   remove(@Param('id') id: string) {
     return this.ruProductService.remove(+id);
   }

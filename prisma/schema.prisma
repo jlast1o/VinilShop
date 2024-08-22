@@ -15,10 +15,10 @@ datasource db {
 }
 
 
-model Client {
-  clientId     Int      @id @map("client_id")
+model Clients {
+  clientId     Int      @id @default(autoincrement()) @map("client_id")
   username     String   @db.VarChar(255)
-  password     String   @db.VarChar(8000)
+  password     String   @db.VarChar(255)
   role         String   @db.VarChar(255)
   number       String   @db.VarChar(255)
   address      String   @db.VarChar(255)
@@ -26,17 +26,18 @@ model Client {
   email        String   @db.VarChar(255)
   contactInfo  String   @db.VarChar(255) @map("contact_information")
   orders       Order[]
-  userBasket   UserBasket[]
+  userBasket   userBasket[]
 }
 
 model RuProduct {
-  ruProductId   Int      @id @map("ruProduct_id")
+  ruProductId   Int      @id @default(autoincrement()) @map("ruProduct_id")
   linkToSource  String   @db.VarChar(255)
   name          String   @db.VarChar(255)
   productType   String   @db.VarChar(255)
   size          String   @db.VarChar(255)
   color         String   @db.VarChar(255)
   description   String   @db.VarChar(255)
+  slug          String   @db.VarChar(255)
   weight        Float
   buyingPrice   Float
   postToNl      Float
@@ -50,7 +51,7 @@ model RuProduct {
   sellingPriceInRubles Float   @map("sellingPriceInRubles")
   profit        Float
   orderedProducts OrderedProduct[]
-  userBasket       UserBasket[]
+  userBasket       userBasket[]
   photoProds      PhotoProd[]
 }
 
@@ -73,15 +74,15 @@ model EuProduct {
   sellingPrice    Float
   profit          Float
   orderedProducts OrderedProduct[]
-  userBasket       UserBasket[]
+  userBasket       userBasket[]
   photoProds      PhotoProd[]
 }
 
 model Order {
-  orderId      Int      @id @map("order_id")
+  orderId      Int      @id @default(autoincrement()) @map("order_id")
   nameOfOrder   String   @db.VarChar(255)
-  client       Client   @relation(fields: [clientId], references: [clientId])
-  clientId     Int
+  client       Clients   @relation(fields: [clientId], references: [clientId])
+  clientId     Int       @map("client_id")
   status       String   @db.VarChar(255)
   dateOfBuy     DateTime @db.Date @map("dateOfBuy")
   dateOfPreorder DateTime @db.Date @map("dateOfPreorder")
@@ -90,29 +91,29 @@ model Order {
 }
 
 model OrderedProduct {
-  orderedProductId Int      @id @map("orderedProducts_id")
+  orderedProductId Int      @id @default(autoincrement()) @map("orderedProducts_id")
   order           Order   @relation(fields: [orderId], references: [orderId])
-  orderId         Int
+  orderId         Int     @map("order_id")
   status          Int
   ruProduct       RuProduct? @relation(fields: [ruProductId], references: [ruProductId])
-  ruProductId     Int?
+  ruProductId     Int?       @map("ruProduct_id")
   euProduct       EuProduct? @relation(fields: [euProductId], references: [euProductId])
-  euProductId     Int?
+  euProductId     Int?       @map("euProduct_id")
   trackNumber     Int
 }
 
-model UserBasket {
-  userBasketId Int      @id @map("userBasket_id")
-  client       Client   @relation(fields: [clientId], references: [clientId])
-  clientId     Int
+model userBasket {
+  userBasketId Int      @id @default(autoincrement()) @map("userBasket_id")
+  client       Clients   @relation(fields: [clientId], references: [clientId])
+  clientId     Int      @map("client_id")
   ruProduct     RuProduct? @relation(fields: [ruProductId], references: [ruProductId])
-  ruProductId   Int?
+  ruProductId   Int?     @map("ruProduct_id")
   euProduct     EuProduct? @relation(fields: [euProductId], references: [euProductId])
-  euProductId   Int?
+  euProductId   Int?   @map("euProduct_id")
 }
 
 model PhotoProd {
-  photoId     Int      @id @map("photo_id")
+  photoId     Int      @id @default(autoincrement()) @map("photo_id")
   ruProduct   RuProduct? @relation(fields: [ruProductId], references: [ruProductId])
   ruProductId Int?
   euProduct   EuProduct? @relation(fields: [euProductId], references: [euProductId])
