@@ -3,13 +3,16 @@ import { Injectable } from '@nestjs/common';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma.service';
+import { OrderedProductsService } from 'src/ordered-products/ordered-products.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,  
+    private readonly orderedProductsService: OrderedProductsService) {}
 
   async createOrder(dto: CreateOrderDto) {
-    return await this.prisma.order.create({
+    const order = await this.prisma.order.create({
       data: {
         clientId: dto.clientId,
         nameOfOrder: dto.nameOfOrder,
@@ -19,7 +22,12 @@ export class OrderService {
         dateOfFullPay: new Date(),
       },
     });
+    await this.orderedProductsService.processOrderedProducts(dto.clientId, order.orderId);
+
+    return order;
   }
+
+
 
   async getOrderById(orderId: number) {
     return await this.prisma.order.findUnique({

@@ -7,28 +7,40 @@ import { UpdateOrderedProductDto } from './dto/update-ordered-product.dto';
 export class OrderedProductsController {
   constructor(private readonly orderedProductsService: OrderedProductsService) {}
 
-  @Post()
-  create(@Body() createOrderedProductDto: CreateOrderedProductDto) {
-    return this.orderedProductsService.create(createOrderedProductDto);
+  @Get(':id')
+  async getOrderedProduct(@Param('id') id: string) {
+    const numericClientId = parseInt(id, 10); // Преобразование строки в число
+    return await this.orderedProductsService.findOne(numericClientId);
+  }
+
+  @Get('order/:orderId')
+  async getOrderedProductsByOrderId(@Param('orderId') orderId: string) {
+    const numericClientId = parseInt(orderId, 10); // Преобразование строки в число
+    return await this.orderedProductsService.findByOrderId(numericClientId);
   }
 
   @Get()
-  findAll() {
+  async getAllOrderedProducts() {
     return this.orderedProductsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderedProductsService.findOne(+id);
-  }
-
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderedProductDto: UpdateOrderedProductDto) {
-    return this.orderedProductsService.update(+id, updateOrderedProductDto);
+  async updateOrderedProduct(@Param('id') id: string, @Body() updateDto: UpdateOrderedProductDto) {
+    const numericClientId = parseInt(id, 10); // Преобразование строки в число
+    return await this.orderedProductsService.update(numericClientId, updateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderedProductsService.remove(+id);
+  async deleteOrderedProduct(@Param('id') id: string) {
+    const numericClientId = parseInt(id, 10); // Преобразование строки в число
+    return await this.orderedProductsService.delete(numericClientId);
   }
+
+  @Delete('order/:orderId')
+  async deleteOrderedProductsByOrderId(@Param('orderId') orderId: string) {
+    const numericClientId = parseInt(orderId, 10); // Преобразование строки в число
+    return await this.orderedProductsService.deleteByOrderId(numericClientId);
+  }
+
+ 
 }

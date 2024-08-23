@@ -1,4 +1,19 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateOrderedProductDto } from './create-ordered-product.dto';
+import { IsInt, IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
-export class UpdateOrderedProductDto extends PartialType(CreateOrderedProductDto) {}
+export class UpdateOrderedProductDto {
+    @IsOptional()
+    @IsInt()
+    status?: number;
+  
+    @IsOptional()
+    @IsInt()
+    ruProductId?: number;
+  
+    @IsOptional()
+    @IsInt()
+    euProductId?: number;
+  
+    @IsOptional()
+    @IsInt()
+    trackNumber?: number;
+  }
