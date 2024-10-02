@@ -7,9 +7,11 @@ import { ConfigModule } from '@nestjs/config';
 import { UserBasketModule } from './user-basket/user-basket.module';
 import { OrderedProductsModule } from './ordered-products/ordered-products.module';
 import { OrderModule } from './order/order.module';
+import { AuthModule } from './auth/auth.module';
+import { ShipmentModule } from './shipment/shipment.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), EuProductModule, RuProductModule, ClientModule, UserBasketModule, OrderedProductsModule, OrderModule],
+  imports: [ConfigModule.forRoot(), EuProductModule, RuProductModule, ClientModule, UserBasketModule, OrderedProductsModule, OrderModule, AuthModule, ShipmentModule],
   controllers: [],
   providers: [PrismaService],
   exports: [ PrismaService],

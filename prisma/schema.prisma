@@ -53,6 +53,7 @@ model RuProduct {
   orderedProducts OrderedProduct[]
   userBasket       userBasket[]
   photoProds      PhotoProd[]
+  shipment Shipment[]
 }
 
 model EuProduct {
@@ -76,6 +77,7 @@ model EuProduct {
   orderedProducts OrderedProduct[]
   userBasket       userBasket[]
   photoProds      PhotoProd[]
+  shipment Shipment[]
 }
 
 model Order {
@@ -120,3 +122,14 @@ model PhotoProd {
   euProductId Int?
   linkToPhoto String   @db.VarChar(255)
 }
+
+
+model Shipment {
+  shipmentId   Int      @id @default(autoincrement()) @map("shipment_id")
+  name         String   @db.VarChar(255)
+  ruProduct     RuProduct? @relation(fields: [ruProductId], references: [ruProductId])
+  ruProductId   Int?     @map("ruProduct_id")
+  euProduct     EuProduct? @relation(fields: [euProductId], references: [euProductId])
+  euProductId   Int?     @map("euProduct_id")
+}
+

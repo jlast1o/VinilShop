@@ -2,15 +2,18 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('client')
 export class ClientController {
-  constructor(private readonly clientService: ClientService) {}
+  constructor(private readonly clientService: ClientService, private readonly authService: AuthService) {}
 
   @Post('create')
-  create(@Body() createClientDto: CreateClientDto) {
-    return this.clientService.create(createClientDto);
+    async create(@Body() createClientDto: CreateClientDto) {
+    const { accessToken, refreshToken } = await this.authService.generateTokens(createClientDto);
+    return { accessToken, refreshToken };
   }
+
 
   @Get()
   findAll() {
